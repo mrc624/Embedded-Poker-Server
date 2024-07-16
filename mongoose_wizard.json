@@ -138,5 +138,5 @@
   "dns": {"type": "default", "url": "udp://8.8.8.8:53", "captive": false},
   "sntp": {"enable": false, "type": 0, "url": "udp://time.google.com:123", "interval": 3600},
   "modbus": {"enable": false, "port": 502},
-  "build": {"board": "evb-pico", "ide": "Pico-SDK", "rtos": "baremetal"}
+  "build": {"board": "unix", "ide": "GCC+make", "rtos": "baremetal"}
 }
