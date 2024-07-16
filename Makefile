@@ -2,7 +2,8 @@
 # Environment setup: https://mongoose.ws/documentation/tutorials/tools/
 
 SOURCES = main.c mongoose.c mongoose_fs.c mongoose_glue.c mongoose_impl.c
-CFLAGS = -W -Wall -Wextra -Wundef -Wshadow -g3 -O0 -I.
+CFLAGS = -W -Wall -Wextra -Werror -Wundef -Wshadow -g3 -O0 -I.
+CFLAGS += -Wno-cast-function-type
 MFLAGS = -DMG_DATA_SIZE=64 -DMG_ENABLE_PACKED_FS=1 -DMG_TLS=MG_TLS_BUILTIN
 
 # Build program from sources
