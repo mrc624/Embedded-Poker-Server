@@ -10,3 +10,11 @@
 void glue_init(void) {
   MG_DEBUG(("Custom init done"));
 }
+
+static struct time s_time = {"10:23"};
+struct time *glue_get_time(void) {
+  return &s_time;  // Sync with your device
+}
+void glue_set_time(struct time *update) {
+  s_time = *update; // Sync with your device
+}

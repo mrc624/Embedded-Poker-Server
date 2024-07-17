@@ -65,6 +65,11 @@ size_t glue_printf(void *context, const char *format, ...);
 
 // Firmware Glue
 
+struct time {
+  char time[20];
+};
+struct time *glue_get_time(void);
+void glue_set_time(struct time *);
 
 
 #ifdef __cplusplus

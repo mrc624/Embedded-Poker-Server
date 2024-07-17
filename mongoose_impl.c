@@ -41,9 +41,12 @@ struct apihandler {
   size_t data_size;                    // Size of C structure
 };
 
-
+struct attribute s_time_attributes[] = {
+  {"time", "string", offsetof(struct time, time), 20, false},
+  {NULL, NULL, 0, 0, false}
+};
 static struct apihandler s_apihandlers[] = {
-
+  {"time", "object", false, 0, 0, 0UL, s_time_attributes, (void *(*)(void)) glue_get_time, (void (*)(void *)) glue_set_time, NULL, sizeof(struct time)}
 };
 
 static struct apihandler *find_handler(struct mg_http_message *hm) {
