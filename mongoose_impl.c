@@ -41,45 +41,9 @@ struct apihandler {
   size_t data_size;                    // Size of C structure
 };
 
-struct attribute s_state_attributes[] = {
-  {"speed", "int", offsetof(struct state, speed), 0, false},
-  {"temperature", "int", offsetof(struct state, temperature), 0, false},
-  {"humidity", "int", offsetof(struct state, humidity), 0, false},
-  {"uptime", "int", offsetof(struct state, uptime), 0, false},
-  {"version", "string", offsetof(struct state, version), 20, false},
-  {"online", "bool", offsetof(struct state, online), 0, false},
-  {"lights", "bool", offsetof(struct state, lights), 0, false},
-  {"level", "int", offsetof(struct state, level), 0, false},
-  {NULL, NULL, 0, 0, false}
-};
-struct attribute s_leds_attributes[] = {
-  {"led1", "bool", offsetof(struct leds, led1), 0, false},
-  {"led2", "bool", offsetof(struct leds, led2), 0, false},
-  {"led3", "bool", offsetof(struct leds, led3), 0, false},
-  {NULL, NULL, 0, 0, false}
-};
-struct attribute s_settings_attributes[] = {
-  {"string_val", "string", offsetof(struct settings, string_val), 40, false},
-  {"log_level", "int", offsetof(struct settings, log_level), 0, false},
-  {"double_val", "double", offsetof(struct settings, double_val), 0, false},
-  {"int_val", "int", offsetof(struct settings, int_val), 0, false},
-  {"bool_val", "bool", offsetof(struct settings, bool_val), 0, false},
-  {NULL, NULL, 0, 0, false}
-};
-struct attribute s_security_attributes[] = {
-  {"admin_password", "string", offsetof(struct security, admin_password), 40, false},
-  {"user_password", "string", offsetof(struct security, user_password), 40, false},
-  {NULL, NULL, 0, 0, false}
-};
+
 static struct apihandler s_apihandlers[] = {
-  {"reboot", "action", false, 3, 7, 0UL, NULL, (void *(*)(void)) glue_check_reboot, (void (*)(void *)) glue_start_reboot, NULL, 0},
-  {"firmware_update", "ota", false, 3, 7, 0UL, NULL, (void *(*)(void)) glue_ota_begin_firmware_update, (void (*)(void *)) glue_ota_end_firmware_update, (void (*)(void)) glue_ota_write_firmware_update, 0},
-  {"file_upload", "upload", false, 3, 3, 0UL, NULL, (void *(*)(void)) glue_file_open_file_upload, (void (*)(void *)) glue_file_close_file_upload, (void (*)(void)) glue_file_write_file_upload, 0},
-  {"state", "object", true, 0, 0, 0UL, s_state_attributes, (void *(*)(void)) glue_get_state, (void (*)(void *)) glue_set_state, NULL, sizeof(struct state)},
-  {"leds", "object", false, 3, 3, 0UL, s_leds_attributes, (void *(*)(void)) glue_get_leds, (void (*)(void *)) glue_set_leds, NULL, sizeof(struct leds)},
-  {"settings", "object", false, 3, 3, 0UL, s_settings_attributes, (void *(*)(void)) glue_get_settings, (void (*)(void *)) glue_set_settings, NULL, sizeof(struct settings)},
-  {"security", "object", false, 7, 7, 0UL, s_security_attributes, (void *(*)(void)) glue_get_security, (void (*)(void *)) glue_set_security, NULL, sizeof(struct security)},
-  {"events", "array", false, 0, 0, 0UL, NULL, NULL, NULL, NULL, 0}
+
 };
 
 static struct apihandler *find_handler(struct mg_http_message *hm) {

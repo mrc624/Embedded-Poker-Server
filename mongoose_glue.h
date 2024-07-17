@@ -15,7 +15,7 @@ extern "C" {
 #define WIZARD_ENABLE_HTTP 1
 #define WIZARD_ENABLE_HTTPS 0
 #define WIZARD_ENABLE_HTTTP_UI 0
-#define WIZARD_ENABLE_HTTP_UI_LOGIN 1
+#define WIZARD_ENABLE_HTTP_UI_LOGIN 0
 
 //////////////////////////////////////////////  MQTT
 #define WIZARD_ENABLE_MQTT 0
@@ -65,54 +65,6 @@ size_t glue_printf(void *context, const char *format, ...);
 
 // Firmware Glue
 
-
-int    glue_authenticate(const char *user, const char *pass);
-
-bool glue_check_reboot(void);
-void glue_start_reboot(void);
-void *glue_ota_begin_firmware_update(char *file_name, size_t total_size);
-bool glue_ota_end_firmware_update(void *context);
-bool glue_ota_write_firmware_update(void *context, void *buf, size_t len);
-void *glue_file_open_file_upload(char *file_name, size_t total_size);
-bool glue_file_close_file_upload(void *context);
-bool glue_file_write_file_upload(void *context, void *buf, size_t len);
-struct state {
-  int speed;
-  int temperature;
-  int humidity;
-  int uptime;
-  char version[20];
-  bool online;
-  bool lights;
-  int level;
-};
-struct state *glue_get_state(void);
-void glue_set_state(struct state *);
-
-struct leds {
-  bool led1;
-  bool led2;
-  bool led3;
-};
-struct leds *glue_get_leds(void);
-void glue_set_leds(struct leds *);
-
-struct settings {
-  char string_val[40];
-  int log_level;
-  double double_val;
-  int int_val;
-  bool bool_val;
-};
-struct settings *glue_get_settings(void);
-void glue_set_settings(struct settings *);
-
-struct security {
-  char admin_password[40];
-  char user_password[40];
-};
-struct security *glue_get_security(void);
-void glue_set_security(struct security *);
 
 
 #ifdef __cplusplus
