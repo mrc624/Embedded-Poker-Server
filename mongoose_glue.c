@@ -6,6 +6,9 @@
 // #include "hal.h"
 
 #include "mongoose_glue.h"
+#include <stdio.h>
+#include <time.h>
+
 
 void glue_init(void) {
   MG_DEBUG(("Custom init done"));
@@ -13,6 +16,9 @@ void glue_init(void) {
 
 static struct time s_time = {"10:23"};
 struct time *glue_get_time(void) {
+  time_t t = time(NULL);
+  struct tm tm = *localtime(&t);
+  sprintf(s_time, "now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
   return &s_time;  // Sync with your device
 }
 void glue_set_time(struct time *update) {
