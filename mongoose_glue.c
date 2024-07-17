@@ -6,7 +6,7 @@
 // #include "hal.h"
 
 #include "mongoose_glue.h"
-#include "time.h"
+#include "mc_time.h"
 
 void glue_init(void) {
   MG_DEBUG(("Custom init done"));
@@ -28,7 +28,9 @@ int glue_authenticate(const char *user, const char *pass) {
 
 static struct time s_time = {"10:23"};
 struct time *glue_get_time(void) {
-  sprintf(s_time.time, get_local_time_string());
+  get_local_time_string();
+  get_utc();
+  sprintf(s_time.time, "%s", get_local_time_string());
   return &s_time;  // Sync with your device
 }
 void glue_set_time(struct time *update) {
