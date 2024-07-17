@@ -18,7 +18,7 @@ static struct time s_time = {"10:23"};
 struct time *glue_get_time(void) {
   time_t t = time(NULL);
   struct tm tm = *localtime(&t);
-  sprintf(s_time, "now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+  sprintf(s_time.time, "now: %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
   return &s_time;  // Sync with your device
 }
 void glue_set_time(struct time *update) {
