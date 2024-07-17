@@ -15,7 +15,7 @@ extern "C" {
 #define WIZARD_ENABLE_HTTP 1
 #define WIZARD_ENABLE_HTTPS 0
 #define WIZARD_ENABLE_HTTTP_UI 0
-#define WIZARD_ENABLE_HTTP_UI_LOGIN 0
+#define WIZARD_ENABLE_HTTP_UI_LOGIN 1
 
 //////////////////////////////////////////////  MQTT
 #define WIZARD_ENABLE_MQTT 0
@@ -65,8 +65,11 @@ size_t glue_printf(void *context, const char *format, ...);
 
 // Firmware Glue
 
+
+int    glue_authenticate(const char *user, const char *pass);
+
 struct time {
-  char time[20];
+  char time[40];
 };
 struct time *glue_get_time(void);
 void glue_set_time(struct time *);

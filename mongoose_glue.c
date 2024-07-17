@@ -14,6 +14,20 @@ void glue_init(void) {
   MG_DEBUG(("Custom init done"));
 }
 
+// Authenticate user/password. Return access level for the authenticated user:
+//   0 - authentication error
+//   1,2,3... - authentication success. Higher levels are more privileged than lower
+int glue_authenticate(const char *user, const char *pass) {
+  int level = 0; // Authentication failure
+  if (strcmp(user, "admin") == 0 && strcmp(pass, "admin") == 0) {
+    level = 7;  // Administrator
+  } else if (strcmp(user, "user") == 0 && strcmp(pass, "user") == 0) {
+    level = 3;  // Ordinary dude
+  }
+  return level;
+}
+
+
 static struct time s_time = {"10:23"};
 struct time *glue_get_time(void) {
   time_t t = time(NULL);

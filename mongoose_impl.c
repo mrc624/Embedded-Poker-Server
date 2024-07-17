@@ -42,7 +42,7 @@ struct apihandler {
 };
 
 struct attribute s_time_attributes[] = {
-  {"time", "string", offsetof(struct time, time), 20, false},
+  {"time", "string", offsetof(struct time, time), 40, false},
   {NULL, NULL, 0, 0, false}
 };
 static struct apihandler s_apihandlers[] = {

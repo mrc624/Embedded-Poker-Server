@@ -8,10 +8,10 @@
     "toolbar": {"label": "My product console"},
     "buttons": "metal",
     "css": "a { color: blue; }\n.brandname { font-weight: bold; color: #677589; }\n.card, .p1 { padding: 0.25em 0.8em; }\n.panel, .p2 { padding: 0.5em 0.8em; }\n.card, .panel, .box { background: white; border: 1px solid #ddd; border-radius: 0.5em; }\n.row { display: flex; }\n.page, .panel, .col { display: flex; flex-direction: column; }\n.size-equal { flex: 1 1 0; }\n.size-auto { flex: 1 1 auto; }\n.title, .small { font-size: 95%; }\n.note { background: #dcfce7; border: 1px solid #86efac; color: #0c4a6e; }\n.note > * { font-size: 90%; }\n.val, .title, .nowrap { white-space: nowrap; text-overflow: ellipsis; }\n.val, .big { font-size: 125%; }\n.card { background: #e2e8f0; border: 1px solid #cbd5e1; }\n.val, .title, .bold { font-weight: bold; }\n.val, .title, .slate { color: #475569; }\n.label { color: #475569; font-size: 95%; }\n.link { color: blue; text-decoration: underline; }\n.page { padding: 0.75em; gap: 0.75em; min-height: 2em; }\n.wrap { flex-wrap: wrap; }\n@media (max-width: 640px) {\n.col, .row { flex-wrap: wrap; }\n.panel { flex: 1 1 100% !important;}\n",
-    "api": {"time": {"type": "object", "attributes": {"time": {"type": "string", "value": "10:23", "size": 20}}}},
+    "api": {"time": {"type": "object", "attributes": {"time": {"type": "string", "value": "10:23", "size": 40}}}},
     "pages": [{"title": "Dashboard", "icon": "desktop", "level": 0, "classes": "page items-start", "layout": [{"classes": "row", "css": "", "layout": [{"classes": "panel gap-1", "css": "flex: 0 0 14em", "layout": [{"classes": "row justify-between items-center", "layout": [{"format": "Time:", "classes": "title"}]}, {"classes": "row justify-between items-center", "layout": [{"classes": "label", "format": "Current Time:"}, {"type": "label", "format": "${time.time}"}]}]}]}]}]
   },
-  "http": {"http": true, "https": false, "ui": true, "login": false, "ca": ""},
+  "http": {"http": true, "https": false, "ui": true, "login": true, "ca": ""},
   "mqtt": {"enable": false, "url": "mqtt://broker.hivemq.com:1883", "ca": "", "rx": "{device_id}/rx", "tx": "{device_id}/tx"},
   "dns": {"type": "default", "url": "udp://8.8.8.8:53", "captive": false},
   "sntp": {"enable": false, "type": 0, "url": "udp://time.google.com:123", "interval": 3600},
