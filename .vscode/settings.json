@@ -1,5 +1,11 @@
 {
     "files.associations": {
-        "mc_time.h": "c"
+        "mc_time.h": "c",
+        "time.h": "c",
+        "stdio.h": "c",
+        "string.h": "c",
+        "pthread.h": "c",
+        "refresh.h": "c",
+        "stdlib.h": "c"
     }
 }

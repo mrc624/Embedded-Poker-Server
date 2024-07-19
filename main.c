@@ -4,10 +4,19 @@
 
 #include "hal.h"
 #include "mongoose_glue.h"
+#include "mc_time.h"
+#include "refresh.h"
 
 int main(void) {
+  printf("----------Starting Main Loop----------\n");
+
+  init_refresh_func();
+
   // Cross-platform hardware init
   hal_init();
+
+  time_init();
+
 
   // This function blocks forever. Call it at the end of main(), or in a
   // separate RTOS task. Give that task 8k stack space.

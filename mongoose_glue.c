@@ -26,11 +26,11 @@ int glue_authenticate(const char *user, const char *pass) {
 }
 
 
-static struct time s_time = {"10:23"};
+static struct time s_time = {"utc", "local", "up"};
 struct time *glue_get_time(void) {
-  get_local_time_string();
-  get_utc();
-  sprintf(s_time.time, "%s", get_local_time_string());
+  sprintf(s_time.utc, "%s", get_utc_string());
+  sprintf(s_time.local, "%s", get_local_time_string());
+  sprintf(s_time.up, "%s", get_uptime_string());
   return &s_time;  // Sync with your device
 }
 void glue_set_time(struct time *update) {

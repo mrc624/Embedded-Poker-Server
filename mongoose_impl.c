@@ -16,9 +16,12 @@
 
 struct mg_mgr g_mgr;  // Mongoose event manager
 
-#if WIZARD_ENABLE_HTTP || WIZARD_ENABLE_HTTPS
+#if (WIZARD_ENABLE_HTTP || WIZARD_ENABLE_HTTPS) && WIZARD_ENABLE_HTTP_UI
 
-// enum attrtype { ATTR_INT, ATTR_DBL, ATTR_BOOL, ATTR_STR };
+// Every time device state changes, this counter increments.
+// Used by the heartbeat endpoint, to signal the UI when to refresh
+static unsigned long s_device_change_version = 0;
+
 struct attribute {
   const char *name;
   const char *type;
@@ -42,7 +45,9 @@ struct apihandler {
 };
 
 struct attribute s_time_attributes[] = {
-  {"time", "string", offsetof(struct time, time), 40, false},
+  {"utc", "string", offsetof(struct time, utc), 32, false},
+  {"local", "string", offsetof(struct time, local), 32, false},
+  {"up", "string", offsetof(struct time, up), 32, false},
   {NULL, NULL, 0, 0, false}
 };
 static struct apihandler s_apihandlers[] = {
@@ -134,7 +139,7 @@ static void handle_logout(struct mg_connection *c) {
               "Expires=Thu, 01 Jan 1970 00:00:00 UTC; "
               "%sHttpOnly; Max-Age=0; \r\n",
               c->is_tls ? "Secure; " : "");
-  mg_http_reply(c, 200, cookie, "true\n");
+  mg_http_reply(c, 401, cookie, "Unauthorized\n");
 }
 #endif  // WIZARD_ENABLE_HTTP_UI_LOGIN
 
@@ -329,6 +334,8 @@ static void handle_api_call(struct mg_connection *c, struct mg_http_message *hm,
           mg_json_get_str2(hm->body, jpath, tmp + a->offset, a->size);
         }
       }
+      // If structure changes, increment version
+      if (memcmp(data, tmp, h->data_size) != 0) s_device_change_version++;
       h->setter(tmp);
       free(tmp);
     }
@@ -339,6 +346,10 @@ static void handle_api_call(struct mg_connection *c, struct mg_http_message *hm,
   } else {
     mg_http_reply(c, 500, JSON_HEADERS, "API type %s unknown\n", h->type);
   }
+}
+
+void glue_update_state(void) {
+  s_device_change_version++;
 }
 
 // Mongoose event handler function, gets called by the mg_mgr_poll()
@@ -373,6 +384,9 @@ static void http_ev_handler(struct mg_connection *c, int ev, void *ev_data) {
 #endif
         if (mg_match(hm->uri, mg_str("/api/ok"), NULL)) {
       mg_http_reply(c, 200, JSON_HEADERS, "true\n");
+    } else if (mg_match(hm->uri, mg_str("/api/heartbeat"), NULL)) {
+      mg_http_reply(c, 200, JSON_HEADERS, "{%m:%lu}\n", MG_ESC("version"),
+                    s_device_change_version);
     } else if (h != NULL) {
       handle_api_call(c, hm, h);
     } else {
@@ -538,7 +552,7 @@ void mongoose_init(void) {
   mg_mgr_init(&g_mgr);      // Initialise event manager
   mg_log_set(MG_LL_DEBUG);  // Set log level to debug
 
-#if WIZARD_ENABLE_HTTP
+#if (WIZARD_ENABLE_HTTP || WIZARD_ENABLE_HTTPS) && WIZARD_ENABLE_HTTP_UI
   MG_INFO(("Starting HTTP listener"));
   mg_http_listen(&g_mgr, HTTP_URL, http_ev_handler, NULL);
 #endif

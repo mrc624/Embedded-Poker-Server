@@ -14,7 +14,7 @@ extern "C" {
 ////////////////////////////////////////////// HTTP
 #define WIZARD_ENABLE_HTTP 1
 #define WIZARD_ENABLE_HTTPS 0
-#define WIZARD_ENABLE_HTTTP_UI 0
+#define WIZARD_ENABLE_HTTP_UI 1
 #define WIZARD_ENABLE_HTTP_UI_LOGIN 1
 
 //////////////////////////////////////////////  MQTT
@@ -63,13 +63,18 @@ void glue_unlock(void);     // Unlock global Mongoose mutex
 // https://mongoose.ws/documentation/#mg_snprintf-mg_vsnprintf
 size_t glue_printf(void *context, const char *format, ...);
 
+// Increment device change state counter - trigger UI refresh
+void glue_update_state(void);
+
 // Firmware Glue
 
 
 int    glue_authenticate(const char *user, const char *pass);
 
 struct time {
-  char time[40];
+  char utc[32];
+  char local[32];
+  char up[32];
 };
 struct time *glue_get_time(void);
 void glue_set_time(struct time *);
