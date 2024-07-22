@@ -8,7 +8,14 @@
 #include "mongoose_glue.h"
 #include "mc_time.h"
 
+#define POKER_PLAYER_MAX 10
+#define POKER_NO_GAME "No Game"
+
+static bool poker_in_progress = false;
+static bool refreshing = false;
+
 void glue_init(void) {
+  poker_in_progress = false;
   MG_DEBUG(("Custom init done"));
 }
 
@@ -25,14 +32,82 @@ int glue_authenticate(const char *user, const char *pass) {
   return level;
 }
 
+// refresh
+bool glue_check_refresh(void) {
+  return refreshing;
+}
+void glue_start_refresh(void) {
+  refreshing = true;
+  glue_update_state();
+}
 
 static struct time s_time = {"utc", "local", "up"};
-struct time *glue_get_time(void) {
-  sprintf(s_time.utc, "%s", get_utc_string());
-  sprintf(s_time.local, "%s", get_local_time_string());
-  sprintf(s_time.up, "%s", get_uptime_string());
-  return &s_time;  // Sync with your device
+void glue_get_time(struct time *data) {
+  strncpy(data->local, get_local_time_string(), strlen(get_local_time_string()));
+  strncpy(data->utc, get_utc_string(), strlen(get_utc_string()));
+  strncpy(data->up, get_uptime_string(), strlen(get_uptime_string()));
+  refreshing = false;
 }
-void glue_set_time(struct time *update) {
-  s_time = *update; // Sync with your device
+void glue_set_time(struct time *data) {
+  s_time = *data;
+}
+
+static struct poker_run s_poker_run = {0, 0, "p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", false, 0, "error", "success"};
+void glue_get_poker_run(struct poker_run *data) {
+  if(poker_in_progress)
+  {
+
+  }
+  else
+  {
+    data->players = 0;
+    data->buy = 0;
+    sprintf(data->p1, POKER_NO_GAME);
+    sprintf(data->p2, POKER_NO_GAME);
+    sprintf(data->p3, POKER_NO_GAME);
+    sprintf(data->p4, POKER_NO_GAME);
+    sprintf(data->p5, POKER_NO_GAME);
+    sprintf(data->p6, POKER_NO_GAME);
+    sprintf(data->p7, POKER_NO_GAME);
+    sprintf(data->p8, POKER_NO_GAME);
+    sprintf(data->p9, POKER_NO_GAME);
+    sprintf(data->p10, POKER_NO_GAME);
+    sprintf(data->error, " ");
+    sprintf(data->success, " ");
+  }
+}
+void glue_set_poker_run(struct poker_run *data) {
+
+  if(poker_in_progress)
+  {
+
+  }
+  else
+  {
+    s_poker_run = *data;
+  }
+}
+
+static struct poker_buyIn s_poker_buyIn = {false, "play", "error", "success"};
+void glue_get_poker_buyIn(struct poker_buyIn *data) {
+  *data = s_poker_buyIn;  // Sync with your device
+}
+void glue_set_poker_buyIn(struct poker_buyIn *data) {
+  s_poker_buyIn = *data; // Sync with your device
+}
+
+static struct poker_indiv s_poker_indiv = {0, "p1", "p2", "error", "success"};
+void glue_get_poker_indiv(struct poker_indiv *data) {
+  *data = s_poker_indiv;  // Sync with your device
+}
+void glue_set_poker_indiv(struct poker_indiv *data) {
+  s_poker_indiv = *data; // Sync with your device
+}
+
+static struct poker_end s_poker_end = {"p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "error", "success"};
+void glue_get_poker_end(struct poker_end *data) {
+  *data = s_poker_end;  // Sync with your device
+}
+void glue_set_poker_end(struct poker_end *data) {
+  s_poker_end = *data; // Sync with your device
 }

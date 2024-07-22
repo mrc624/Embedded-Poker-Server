@@ -71,13 +71,82 @@ void glue_update_state(void);
 
 int    glue_authenticate(const char *user, const char *pass);
 
+bool glue_check_refresh(void);
+void glue_start_refresh(void);
 struct time {
   char utc[32];
   char local[32];
   char up[32];
 };
-struct time *glue_get_time(void);
+void glue_get_time(struct time *);
 void glue_set_time(struct time *);
+
+struct poker_run {
+  int players;
+  int buy;
+  char p1[25];
+  char p2[25];
+  char p3[25];
+  char p4[25];
+  char p5[25];
+  char p6[25];
+  char p7[25];
+  char p8[25];
+  char p9[25];
+  char p10[25];
+  bool game;
+  int onTable;
+  char error[25];
+  char success[25];
+};
+void glue_get_poker_run(struct poker_run *);
+void glue_set_poker_run(struct poker_run *);
+
+struct poker_buyIn {
+  bool add;
+  char play[25];
+  char error[25];
+  char success[25];
+};
+void glue_get_poker_buyIn(struct poker_buyIn *);
+void glue_set_poker_buyIn(struct poker_buyIn *);
+
+struct poker_indiv {
+  int outAmnt;
+  char out[25];
+  char in[25];
+  char error[25];
+  char success[25];
+};
+void glue_get_poker_indiv(struct poker_indiv *);
+void glue_set_poker_indiv(struct poker_indiv *);
+
+struct poker_end {
+  char p1[25];
+  char p2[25];
+  char p3[25];
+  char p4[25];
+  char p5[25];
+  char p6[25];
+  char p7[25];
+  char p8[25];
+  char p9[25];
+  char p10[25];
+  int p1Cash;
+  int p2Cash;
+  int p3Cash;
+  int p4Cash;
+  int p5Cash;
+  int p6Cash;
+  int p7Cash;
+  int p8Cash;
+  int p9Cash;
+  int p10Cash;
+  char error[25];
+  char success[25];
+};
+void glue_get_poker_end(struct poker_end *);
+void glue_set_poker_end(struct poker_end *);
 
 
 #ifdef __cplusplus

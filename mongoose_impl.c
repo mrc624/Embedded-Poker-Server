@@ -7,8 +7,10 @@
 
 #if MG_ARCH == MG_ARCH_UNIX || MG_ARCH == MG_ARCH_WIN32
 #define HTTP_URL "http://0.0.0.0:8080"
+#define HTTPS_URL "https://0.0.0.0:8843"
 #else
 #define HTTP_URL "http://0.0.0.0:80"
+#define HTTPS_URL "https://0.0.0.0:443"
 #endif
 
 #define NO_CACHE_HEADERS "Cache-Control: no-cache\r\n"
@@ -16,8 +18,9 @@
 
 struct mg_mgr g_mgr;  // Mongoose event manager
 
-#if (WIZARD_ENABLE_HTTP || WIZARD_ENABLE_HTTPS) && WIZARD_ENABLE_HTTP_UI
+#if WIZARD_ENABLE_HTTP || WIZARD_ENABLE_HTTPS
 
+#if WIZARD_ENABLE_HTTP_UI
 // Every time device state changes, this counter increments.
 // Used by the heartbeat endpoint, to signal the UI when to refresh
 static unsigned long s_device_change_version = 0;
@@ -38,7 +41,7 @@ struct apihandler {
   int write_level;
   unsigned long version;               // Every change increments version
   const struct attribute *attributes;  // Points to the strucure descriptor
-  void *(*getter)(void);               // Getter/check/begin function
+  void (*getter)(void *);              // Getter/check/begin function
   void (*setter)(void *);              // Setter/start/end function
   void (*writer)(void);                // Write function (OTA and upload)
   size_t data_size;                    // Size of C structure
@@ -50,8 +53,72 @@ struct attribute s_time_attributes[] = {
   {"up", "string", offsetof(struct time, up), 32, false},
   {NULL, NULL, 0, 0, false}
 };
+struct attribute s_poker_run_attributes[] = {
+  {"players", "int", offsetof(struct poker_run, players), 0, false},
+  {"buy", "int", offsetof(struct poker_run, buy), 0, false},
+  {"p1", "string", offsetof(struct poker_run, p1), 25, false},
+  {"p2", "string", offsetof(struct poker_run, p2), 25, false},
+  {"p3", "string", offsetof(struct poker_run, p3), 25, false},
+  {"p4", "string", offsetof(struct poker_run, p4), 25, false},
+  {"p5", "string", offsetof(struct poker_run, p5), 25, false},
+  {"p6", "string", offsetof(struct poker_run, p6), 25, false},
+  {"p7", "string", offsetof(struct poker_run, p7), 25, false},
+  {"p8", "string", offsetof(struct poker_run, p8), 25, false},
+  {"p9", "string", offsetof(struct poker_run, p9), 25, false},
+  {"p10", "string", offsetof(struct poker_run, p10), 25, false},
+  {"game", "bool", offsetof(struct poker_run, game), 0, false},
+  {"onTable", "int", offsetof(struct poker_run, onTable), 0, false},
+  {"error", "string", offsetof(struct poker_run, error), 25, false},
+  {"success", "string", offsetof(struct poker_run, success), 25, false},
+  {NULL, NULL, 0, 0, false}
+};
+struct attribute s_poker_buyIn_attributes[] = {
+  {"add", "bool", offsetof(struct poker_buyIn, add), 0, false},
+  {"play", "string", offsetof(struct poker_buyIn, play), 25, false},
+  {"error", "string", offsetof(struct poker_buyIn, error), 25, false},
+  {"success", "string", offsetof(struct poker_buyIn, success), 25, false},
+  {NULL, NULL, 0, 0, false}
+};
+struct attribute s_poker_indiv_attributes[] = {
+  {"outAmnt", "int", offsetof(struct poker_indiv, outAmnt), 0, false},
+  {"out", "string", offsetof(struct poker_indiv, out), 25, false},
+  {"in", "string", offsetof(struct poker_indiv, in), 25, false},
+  {"error", "string", offsetof(struct poker_indiv, error), 25, false},
+  {"success", "string", offsetof(struct poker_indiv, success), 25, false},
+  {NULL, NULL, 0, 0, false}
+};
+struct attribute s_poker_end_attributes[] = {
+  {"p1", "string", offsetof(struct poker_end, p1), 25, false},
+  {"p2", "string", offsetof(struct poker_end, p2), 25, false},
+  {"p3", "string", offsetof(struct poker_end, p3), 25, false},
+  {"p4", "string", offsetof(struct poker_end, p4), 25, false},
+  {"p5", "string", offsetof(struct poker_end, p5), 25, false},
+  {"p6", "string", offsetof(struct poker_end, p6), 25, false},
+  {"p7", "string", offsetof(struct poker_end, p7), 25, false},
+  {"p8", "string", offsetof(struct poker_end, p8), 25, false},
+  {"p9", "string", offsetof(struct poker_end, p9), 25, false},
+  {"p10", "string", offsetof(struct poker_end, p10), 25, false},
+  {"p1Cash", "int", offsetof(struct poker_end, p1Cash), 0, false},
+  {"p2Cash", "int", offsetof(struct poker_end, p2Cash), 0, false},
+  {"p3Cash", "int", offsetof(struct poker_end, p3Cash), 0, false},
+  {"p4Cash", "int", offsetof(struct poker_end, p4Cash), 0, false},
+  {"p5Cash", "int", offsetof(struct poker_end, p5Cash), 0, false},
+  {"p6Cash", "int", offsetof(struct poker_end, p6Cash), 0, false},
+  {"p7Cash", "int", offsetof(struct poker_end, p7Cash), 0, false},
+  {"p8Cash", "int", offsetof(struct poker_end, p8Cash), 0, false},
+  {"p9Cash", "int", offsetof(struct poker_end, p9Cash), 0, false},
+  {"p10Cash", "int", offsetof(struct poker_end, p10Cash), 0, false},
+  {"error", "string", offsetof(struct poker_end, error), 25, false},
+  {"success", "string", offsetof(struct poker_end, success), 25, false},
+  {NULL, NULL, 0, 0, false}
+};
 static struct apihandler s_apihandlers[] = {
-  {"time", "object", false, 0, 0, 0UL, s_time_attributes, (void *(*)(void)) glue_get_time, (void (*)(void *)) glue_set_time, NULL, sizeof(struct time)}
+  {"refresh", "action", false, 0, 0, 0UL, NULL, (void (*)(void *)) glue_check_refresh, (void (*)(void *)) glue_start_refresh, NULL, 0},
+  {"time", "object", false, 0, 0, 0UL, s_time_attributes, (void (*)(void *)) glue_get_time, (void (*)(void *)) glue_set_time, NULL, sizeof(struct time)},
+  {"poker_run", "object", false, 0, 0, 0UL, s_poker_run_attributes, (void (*)(void *)) glue_get_poker_run, (void (*)(void *)) glue_set_poker_run, NULL, sizeof(struct poker_run)},
+  {"poker_buyIn", "object", false, 0, 0, 0UL, s_poker_buyIn_attributes, (void (*)(void *)) glue_get_poker_buyIn, (void (*)(void *)) glue_set_poker_buyIn, NULL, sizeof(struct poker_buyIn)},
+  {"poker_indiv", "object", false, 0, 0, 0UL, s_poker_indiv_attributes, (void (*)(void *)) glue_get_poker_indiv, (void (*)(void *)) glue_set_poker_indiv, NULL, sizeof(struct poker_indiv)},
+  {"poker_end", "object", false, 0, 0, 0UL, s_poker_end_attributes, (void (*)(void *)) glue_get_poker_end, (void (*)(void *)) glue_set_poker_end, NULL, sizeof(struct poker_end)}
 };
 
 static struct apihandler *find_handler(struct mg_http_message *hm) {
@@ -311,7 +378,8 @@ size_t print_struct(void (*out)(char, void *), void *ptr, va_list *ap) {
 static void handle_api_call(struct mg_connection *c, struct mg_http_message *hm,
                             struct apihandler *h) {
   if (strcmp(h->type, "object") == 0) {
-    void *data = h->getter();
+    void *data = calloc(1, h->data_size);
+    h->getter(data);
     if (hm->body.len > 0 && h->data_size > 0) {
       char *tmp = calloc(1, h->data_size);
       size_t i;
@@ -338,8 +406,10 @@ static void handle_api_call(struct mg_connection *c, struct mg_http_message *hm,
       if (memcmp(data, tmp, h->data_size) != 0) s_device_change_version++;
       h->setter(tmp);
       free(tmp);
+      h->getter(data);  // Re-sync again after setting
     }
     mg_http_reply(c, 200, JSON_HEADERS, "{%M}\n", print_struct, h, data);
+    free(data);
   } else if (strcmp(h->type, "action") == 0) {
     handle_action(c, hm, (bool (*)(void)) h->getter,
                   (void (*)(void)) h->setter);
@@ -351,12 +421,12 @@ static void handle_api_call(struct mg_connection *c, struct mg_http_message *hm,
 void glue_update_state(void) {
   s_device_change_version++;
 }
+#endif  // WIZARD_ENABLE_HTTP_UI
 
 // Mongoose event handler function, gets called by the mg_mgr_poll()
 static void http_ev_handler(struct mg_connection *c, int ev, void *ev_data) {
+#if WIZARD_ENABLE_HTTP_UI
   handle_uploads(c, ev, ev_data);
-  (void) handle_action;  // Squash warnings
-
   if (ev == MG_EV_POLL && c->data[0] == 'A') {
     // Check if action in progress is complete
     struct action_state *as = (struct action_state *) c->data;
@@ -364,10 +434,12 @@ static void http_ev_handler(struct mg_connection *c, int ev, void *ev_data) {
       mg_http_reply(c, 200, JSON_HEADERS, "true");
       memset(as, 0, sizeof(*as));
     }
-  } else if (ev == MG_EV_HTTP_MSG && c->data[0] != 'U') {
+  } else
+#endif
+      if (ev == MG_EV_HTTP_MSG && c->data[0] != 'U') {
     struct mg_http_message *hm = (struct mg_http_message *) ev_data;
+#if WIZARD_ENABLE_HTTP_UI
     struct apihandler *h = find_handler(hm);
-
 #if WIZARD_ENABLE_HTTP_UI_LOGIN
     struct user *u = authenticate(hm);
     if (mg_match(hm->uri, mg_str("/api/#"), NULL) &&
@@ -389,7 +461,9 @@ static void http_ev_handler(struct mg_connection *c, int ev, void *ev_data) {
                     s_device_change_version);
     } else if (h != NULL) {
       handle_api_call(c, hm, h);
-    } else {
+    } else
+#endif  // WIZARD_ENABLE_HTTP_UI
+    {
       struct mg_http_serve_opts opts;
       memset(&opts, 0, sizeof(opts));
       opts.root_dir = "/web_root/";
@@ -411,7 +485,7 @@ static void http_ev_handler(struct mg_connection *c, int ev, void *ev_data) {
     }
   }
 }
-#endif  // WIZARD_ENABLE_HTTP
+#endif  // WIZARD_ENABLE_HTTP || WIZARD_ENABLE_HTTPS
 
 #if WIZARD_ENABLE_SNTP
 static uint64_t s_sntp_timer = 0;
@@ -552,9 +626,13 @@ void mongoose_init(void) {
   mg_mgr_init(&g_mgr);      // Initialise event manager
   mg_log_set(MG_LL_DEBUG);  // Set log level to debug
 
-#if (WIZARD_ENABLE_HTTP || WIZARD_ENABLE_HTTPS) && WIZARD_ENABLE_HTTP_UI
+#if WIZARD_ENABLE_HTTP
   MG_INFO(("Starting HTTP listener"));
   mg_http_listen(&g_mgr, HTTP_URL, http_ev_handler, NULL);
+#endif
+#if WIZARD_ENABLE_HTTPS
+  MG_INFO(("Starting HTTPS listener"));
+  mg_http_listen(&g_mgr, HTTPS_URL, http_ev_handler, "");
 #endif
 
 #if WIZARD_ENABLE_SNTP
