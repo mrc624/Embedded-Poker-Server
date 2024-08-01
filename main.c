@@ -5,6 +5,8 @@
 #include "hal.h"
 #include "mongoose_glue.h"
 #include "mc_time.h"
+#include "csv.h"
+#include "poker.h"
 
 int main(void) {
   printf("----------Starting Main Loop----------\n");

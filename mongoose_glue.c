@@ -7,15 +7,24 @@
 
 #include "mongoose_glue.h"
 #include "mc_time.h"
+#include "csv.h"
+#include "poker.h"
 
-#define POKER_PLAYER_MAX 10
 #define POKER_NO_GAME "No Game"
+#define POKER_DNE "Does Not Exist"
+
+typedef enum{
+  NO_CHANGE,
+  ERROR_CHANGE,
+  SUCCESS_CHANGE,
+  NUM_MG_ERROR
+} MG_ERROR_T;
 
 static bool poker_in_progress = false;
+static char poker_player_names[POKER_PLAYER_MAX][POKER_NAME_LEN];
 static bool refreshing = false;
 
 void glue_init(void) {
-  poker_in_progress = false;
   MG_DEBUG(("Custom init done"));
 }
 
@@ -53,37 +62,114 @@ void glue_set_time(struct time *data) {
 }
 
 static struct poker_run s_poker_run = {0, 0, "p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", false, 0, "error", "success"};
+MG_ERROR_T poker_run_error = NO_CHANGE;
 void glue_get_poker_run(struct poker_run *data) {
   if(poker_in_progress)
   {
-
+    printf("-----POKER IN PROGRESS-----\n");
   }
   else
   {
-    data->players = 0;
-    data->buy = 0;
-    sprintf(data->p1, POKER_NO_GAME);
-    sprintf(data->p2, POKER_NO_GAME);
-    sprintf(data->p3, POKER_NO_GAME);
-    sprintf(data->p4, POKER_NO_GAME);
-    sprintf(data->p5, POKER_NO_GAME);
-    sprintf(data->p6, POKER_NO_GAME);
-    sprintf(data->p7, POKER_NO_GAME);
-    sprintf(data->p8, POKER_NO_GAME);
-    sprintf(data->p9, POKER_NO_GAME);
-    sprintf(data->p10, POKER_NO_GAME);
-    sprintf(data->error, " ");
-    sprintf(data->success, " ");
+    printf("-----POKER NOT IN PROGRESS-----\n");
+    switch(poker_run_error)
+    {
+      case NO_CHANGE:
+      printf("-----NO CHANGE-----\n");
+        s_poker_run.players = 0;
+        s_poker_run.buy = 0;
+        sprintf(s_poker_run.p1, POKER_NO_GAME);
+        sprintf(s_poker_run.p2, POKER_NO_GAME);
+        sprintf(s_poker_run.p3, POKER_NO_GAME);
+        sprintf(s_poker_run.p4, POKER_NO_GAME);
+        sprintf(s_poker_run.p5, POKER_NO_GAME);
+        sprintf(s_poker_run.p6, POKER_NO_GAME);
+        sprintf(s_poker_run.p7, POKER_NO_GAME);
+        sprintf(s_poker_run.p8, POKER_NO_GAME);
+        sprintf(s_poker_run.p9, POKER_NO_GAME);
+        sprintf(s_poker_run.p10, POKER_NO_GAME);
+        sprintf(s_poker_run.error, " ");
+        sprintf(s_poker_run.success, " ");
+        break;
+      case ERROR_CHANGE:
+        printf("-----ERROR CHANGE-----\n");
+        sprintf(s_poker_run.success, " ");
+        break;
+      case SUCCESS_CHANGE:
+        printf("-----SUCCESS CHANGE-----\n");
+        sprintf(s_poker_run.success, "Success");
+        sprintf(s_poker_run.error, " ");
+        break;
+      case NUM_MG_ERROR:
+        printf("-----NUM MG ERROR-----\n");
+        break;
+      default:
+        printf("-----DEFAULT CASE-----\n");
+        break;
+    }
+    printf("-----POKER RUN ERROR: %u-----\n", poker_run_error);
   }
+  *data = s_poker_run;
 }
 void glue_set_poker_run(struct poker_run *data) {
-
+  poker_run_error = NO_CHANGE;
   if(poker_in_progress)
   {
 
   }
   else
   {
+    //Checking players exist
+    if(!player_exists(data->p1) && strcmp(data->p1, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 1, POKER_DNE);
+    }
+    else if(!player_exists(data->p2) && strcmp(data->p2, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 2, POKER_DNE);
+    }
+    else if(!player_exists(data->p3) && strcmp(data->p3, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 3, POKER_DNE);
+    }
+    else if(!player_exists(data->p4) && strcmp(data->p4, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 4, POKER_DNE);
+    }
+    else if(!player_exists(data->p5) && strcmp(data->p5, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 5, POKER_DNE);
+    }
+    else if(!player_exists(data->p6) && strcmp(data->p6, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 6, POKER_DNE);
+    }
+    else if(!player_exists(data->p7) && strcmp(data->p7, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 7, POKER_DNE);
+    }
+    else if(!player_exists(data->p8) && strcmp(data->p8, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 8, POKER_DNE);
+    }
+    else if(!player_exists(data->p9) && strcmp(data->p9, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 9, POKER_DNE);
+    }
+    else if(!player_exists(data->p10) && strcmp(data->p10, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P%d %s", 10, POKER_DNE);
+    }
+
     s_poker_run = *data;
   }
 }
