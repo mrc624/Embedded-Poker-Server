@@ -21,7 +21,7 @@ typedef enum{
 } MG_ERROR_T;
 
 static bool poker_in_progress = false;
-static char poker_player_names[POKER_PLAYER_MAX][POKER_NAME_LEN];
+//static char poker_player_names[POKER_PLAYER_MAX][POKER_NAME_LEN];
 static bool refreshing = false;
 
 void glue_init(void) {
@@ -59,6 +59,38 @@ void glue_get_time(struct time *data) {
 }
 void glue_set_time(struct time *data) {
   s_time = *data;
+}
+
+static int players_put_in_lowest_num_check_and_get_num_players(struct poker_run *data)
+{
+  bool emptyFound = false;
+  int num = 0;
+  if(strcmp(data->p1, POKER_NO_GAME) == 0)
+  {
+    emptyFound = true;
+  }
+  else
+  {
+    num++;
+  }
+  if(strcmp(data->p2, POKER_NO_GAME) == 0)
+  {
+    if(emptyFound)
+    {
+      sprintf(data->error, "Place P2 in Lowest Index");
+      return -1;
+    }
+    else
+    {
+      emptyFound = true;
+    } 
+  }
+  else
+  {
+    num++;
+  }
+
+  return num;
 }
 
 static struct poker_run s_poker_run = {0, 0, "p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", false, 0, "error", "success"};
@@ -118,8 +150,98 @@ void glue_set_poker_run(struct poker_run *data) {
   }
   else
   {
+    //Checking if each any player entries match
+    if((strcmp(data->p1, data->p2) == 0
+              || strcmp(data->p1, data->p3) == 0
+              || strcmp(data->p1, data->p4) == 0
+              || strcmp(data->p1, data->p5) == 0
+              || strcmp(data->p1, data->p6) == 0
+              || strcmp(data->p1, data->p7) == 0
+              || strcmp(data->p1, data->p8) == 0
+              || strcmp(data->p1, data->p9) == 0
+              || strcmp(data->p1, data->p10) == 0
+              ) && strcmp(data->p1, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P1 (%s) Entered Twice", data->p1);
+    }
+    else if((strcmp(data->p2, data->p3) == 0
+              || strcmp(data->p2, data->p4) == 0
+              || strcmp(data->p2, data->p5) == 0
+              || strcmp(data->p2, data->p6) == 0
+              || strcmp(data->p2, data->p7) == 0
+              || strcmp(data->p2, data->p8) == 0
+              || strcmp(data->p2, data->p9) == 0
+              || strcmp(data->p2, data->p10) == 0
+              ) && strcmp(data->p2, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P2 (%s) Entered Twice", data->p2);
+    }
+    else if((strcmp(data->p3, data->p4) == 0
+              || strcmp(data->p3, data->p5) == 0
+              || strcmp(data->p3, data->p6) == 0
+              || strcmp(data->p3, data->p7) == 0
+              || strcmp(data->p3, data->p8) == 0
+              || strcmp(data->p3, data->p9) == 0
+              || strcmp(data->p3, data->p10) == 0
+              ) && strcmp(data->p3, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P3 (%s) Entered Twice", data->p3);
+    }
+    else if((strcmp(data->p4, data->p5) == 0
+              || strcmp(data->p4, data->p6) == 0
+              || strcmp(data->p4, data->p7) == 0
+              || strcmp(data->p4, data->p8) == 0
+              || strcmp(data->p4, data->p9) == 0
+              || strcmp(data->p4, data->p10) == 0
+              ) && strcmp(data->p4, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P4 (%s) Entered Twice", data->p4);
+    }
+    else if((strcmp(data->p5, data->p6) == 0
+              || strcmp(data->p5, data->p7) == 0
+              || strcmp(data->p5, data->p8) == 0
+              || strcmp(data->p5, data->p9) == 0
+              || strcmp(data->p5, data->p10) == 0
+              ) && strcmp(data->p5, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P5 (%s) Entered Twice", data->p5);
+    }
+    else if((strcmp(data->p6, data->p7) == 0
+              || strcmp(data->p6, data->p8) == 0
+              || strcmp(data->p6, data->p9) == 0
+              || strcmp(data->p6, data->p10) == 0
+              ) && strcmp(data->p6, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P6 (%s) Entered Twice", data->p6);
+    }
+    else if((strcmp(data->p7, data->p8) == 0
+              || strcmp(data->p7, data->p9) == 0
+              || strcmp(data->p7, data->p10) == 0
+              ) && strcmp(data->p7, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P7 (%s) Entered Twice", data->p7);
+    }
+    else if((strcmp(data->p8, data->p9) == 0
+              || strcmp(data->p8, data->p10) == 0
+              ) && strcmp(data->p8, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P8 (%s) Entered Twice", data->p8);
+    }
+    else if((strcmp(data->p9, data->p10) == 0) && strcmp(data->p9, POKER_NO_GAME) != 0)
+    {
+      poker_run_error = ERROR_CHANGE;
+      sprintf(data->error, "P9 (%s) Entered Twice", data->p9);
+    }
     //Checking players exist
-    if(!player_exists(data->p1) && strcmp(data->p1, POKER_NO_GAME) != 0)
+    else if(!player_exists(data->p1) && strcmp(data->p1, POKER_NO_GAME) != 0)
     {
       poker_run_error = ERROR_CHANGE;
       sprintf(data->error, "P%d %s", 1, POKER_DNE);
@@ -168,6 +290,11 @@ void glue_set_poker_run(struct poker_run *data) {
     {
       poker_run_error = ERROR_CHANGE;
       sprintf(data->error, "P%d %s", 10, POKER_DNE);
+    }
+    //Checking Players Are In Lowest P# Possible AND at least two players
+    else if(players_put_in_lowest_num_check_and_get_num_players(data) < 0)
+    {
+      poker_run_error = ERROR_CHANGE;
     }
 
     s_poker_run = *data;
