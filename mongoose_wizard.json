@@ -10,303 +10,222 @@
     }, 
     "buttons": "blue", 
     "css": "a { color: blue; }\n.brandname { font-weight: bold; color: #677589; }\n.card, .p1 { padding: 0.25em 0.8em; }\n.panel, .p2 { padding: 0.5em 0.8em; }\n.card, .panel, .box { background: white; border: 1px solid #ddd; border-radius: 0.5em; }\n.row { display: flex; }\n.page, .panel, .col { display: flex; flex-direction: column; }\n.size-equal { flex: 1 1 0; }\n.size-auto { flex: 1 1 auto; }\n.title, .small { font-size: 95%; }\n.note { background: #dcfce7; border: 1px solid #86efac; color: #0c4a6e; }\n.note > * { font-size: 90%; }\n.val, .title, .nowrap { white-space: nowrap; text-overflow: ellipsis; }\n.val, .big { font-size: 125%; }\n.card { background: #e2e8f0; border: 1px solid #cbd5e1; }\n.val, .title, .bold { font-weight: bold; }\n.val, .title, .slate { color: #475569; }\n.label { color: #475569; font-size: 95%; }\n.link { color: blue; text-decoration: underline; }\n.page { padding: 0.75em; gap: 0.75em; min-height: 2em; }\n.wrap { flex-wrap: wrap; }\n@media (max-width: 640px) {\n.col, .row { flex-wrap: wrap; }\n.panel { flex: 1 1 100% !important;}\n", 
-    "api": {
-      "refresh": {
-        "type": "action", 
-        "value": false
-      }, 
-      "time": {
-        "type": "object", 
-        "attributes": {
-          "utc": {"type": "string", "value": "utc", "size": 32}, 
-          "local": {"type": "string", "value": "local", "size": 32}, 
-          "up": {"type": "string", "value": "up", "size": 32}
-        }
-      }, 
-      "poker_run": {
-        "type": "object", 
-        "attributes": {
-          "players": {"type": "int", "value": 0}, 
-          "buy": {"type": "int", "value": 0}, 
-          "p1": {"type": "string", "value": "p1", "size": 25}, 
-          "p2": {"type": "string", "value": "p2", "size": 25}, 
-          "p3": {"type": "string", "value": "p3", "size": 25}, 
-          "p4": {"type": "string", "value": "p4", "size": 25}, 
-          "p5": {"type": "string", "value": "p5", "size": 25}, 
-          "p6": {"type": "string", "value": "p6", "size": 25}, 
-          "p7": {"type": "string", "value": "p7", "size": 25}, 
-          "p8": {"type": "string", "value": "p8", "size": 25}, 
-          "p9": {"type": "string", "value": "p9", "size": 25}, 
-          "p10": {"type": "string", "value": "p10", "size": 25}, 
-          "game": {"type": "bool", "value": false}, 
-          "onTable": {"type": "int", "value": 0}, 
-          "error": {"type": "string", "value": "error", "size": 25}, 
-          "success": {"type": "string", "value": "success", "size": 25}
-        }
-      }, 
-      "poker_buyIn": {
-        "type": "object", 
-        "attributes": {
-          "add": {"type": "bool", "value": false}, 
-          "play": {"type": "string", "value": "play", "size": 25}, 
-          "error": {"type": "string", "value": "error", "size": 25}, 
-          "success": {"type": "string", "value": "success", "size": 25}
-        }
-      }, 
-      "poker_indiv": {
-        "type": "object", 
-        "attributes": {
-          "outAmnt": {"type": "int", "value": 0}, 
-          "out": {"type": "string", "value": "p1", "size": 25}, 
-          "in": {"type": "string", "value": "p2", "size": 25}, 
-          "error": {"type": "string", "value": "error", "size": 25}, 
-          "success": {"type": "string", "value": "success", "size": 25}
-        }
-      }, 
-      "poker_end": {
-        "type": "object", 
-        "attributes": {
-          "p1": {"type": "string", "value": "p1", "size": 25}, 
-          "p2": {"type": "string", "value": "p2", "size": 25}, 
-          "p3": {"type": "string", "value": "p3", "size": 25}, 
-          "p4": {"type": "string", "value": "p4", "size": 25}, 
-          "p5": {"type": "string", "value": "p5", "size": 25}, 
-          "p6": {"type": "string", "value": "p6", "size": 25}, 
-          "p7": {"type": "string", "value": "p7", "size": 25}, 
-          "p8": {"type": "string", "value": "p8", "size": 25}, 
-          "p9": {"type": "string", "value": "p9", "size": 25}, 
-          "p10": {"type": "string", "value": "p10", "size": 25}, 
-          "p1Cash": {"type": "int", "value": 0}, 
-          "p2Cash": {"type": "int", "value": 0}, 
-          "p3Cash": {"type": "int", "value": 0}, 
-          "p4Cash": {"type": "int", "value": 0}, 
-          "p5Cash": {"type": "int", "value": 0}, 
-          "p6Cash": {"type": "int", "value": 0}, 
-          "p7Cash": {"type": "int", "value": 0}, 
-          "p8Cash": {"type": "int", "value": 0}, 
-          "p9Cash": {"type": "int", "value": 0}, 
-          "p10Cash": {"type": "int", "value": 0}, 
-          "error": {"type": "string", "value": "error", "size": 25}, 
-          "success": {"type": "string", "value": "success", "size": 25}
-        }
-      }
-    }, 
     "pages": [
-    {"title": "Dashboard", "icon": "desktop", "level": 0, "classes": "page items-start", "layout": [
-      {"classes": "row", "css": "", "layout": [
-        {"classes": "panel gap-1", "css": "flex: 0 0 14em; min-width: 300px; max-width: 50%; width: 500px;", "layout": [
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Time:", "classes": "title"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "label", "format": "UTC Time:"},
-            {"type": "label", "format": "${time.utc}"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "label", "format": "Local Time:"},
-            {"type": "label", "format": "${time.local}"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "label", "format": "Uptime:"},
-            {"type": "label", "format": "${time.up}"}
-          ]}
-        ]}
-      ]}
-    ]},
-    {"title": "Run Poker Game", "icon": "lightning", "classes": "page min-h-6", "layout": [
-      {"classes": "flex items-start gap-3 min-w-10 min-h-10", "layout": [
-        {"classes": "flex gap-3", "layout": [
-          {"classes": "size-equal card", "layout": [
-            {"type": "status", "ref": "poker_run.game", "labels": ["No Game In Progress","Game in Progress"], "css": "font-size: 40px; font-weight: bold"}
-          ]},
-          {"classes": "size-equal card", "layout": [
-            {"format": "Players:", "classes": "title"},
-            {"format": "${poker_run.players}", "classes": "val"}
-          ]},
-          {"classes": "size-equal card", "layout": [
-            {"format": "Money on Table:", "classes": "title"},
-            {"format": "$${poker_run.onTable}", "classes": "val"}
-          ]}
-        ]}
-      ]},
-      {"classes": "flex items-start gap-3 min-w-10 min-h-10", "layout": [
-        {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
-          {"classes": "title", "format": "Initialize Game"},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "label", "format": "Players:"},
-            {"type": "dropdown", "ref": "poker_run.players", "options": "0,1,2,3,4,5,6,7,8,9,10", "css": "min-width: 8em;"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "label", "format": "Buy In:"},
-            {"type": "dropdown", "ref": "poker_run.buy", "options": "$1, $5, $10, $15, $20", "css": "min-width: 8em;"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 1:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p1"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 2:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p2"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 3:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p3"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 4:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p4"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 5:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p5"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 6:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p6"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 7:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p7"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 8:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p8"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 9:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p9"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player 10:", "classes": "label"},
-            {"type": "input", "ref": "poker_run.p10"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
-              {"format": "${poker_run.error}", "classes": "label", "css": "color: red; font-weight: bold;"},
-              {"format": "${poker_run.success}", "classes": "label", "css": "color: green;"}
-            ]},
-            {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
-              {"type": "savebutton", "title": "Save", "icon": "save", "ref": "poker_run"}
+      {"title": "Dashboard", "icon": "desktop", "level": 0, "classes": "page items-start", "layout": [
+          {"classes": "row", "css": "", "layout": [
+              {"classes": "panel gap-1", "css": "flex: 0 0 14em; min-width: 300px; max-width: 50%; width: 500px;", "layout": [
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Time:", "classes": "title"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "label", "format": "UTC Time:"},
+                      {"type": "label", "format": "${time.utc}"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "label", "format": "Local Time:"},
+                      {"type": "label", "format": "${time.local}"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "label", "format": "Uptime:"},
+                      {"type": "label", "format": "${time.up}"}
+                    ]}
+                ]}
             ]}
-          ]}
         ]},
-        {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
-          {"classes": "title", "format": "Take Another Buy In"},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "label", "format": "Player"},
-            {"type": "input", "ref": "poker_buyIn.play"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "label", "format": "Money is Being Added to the Table"},
-            {"type": "toggle", "ref": "poker_buyIn.add"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
-              {"format": "${poker_buyIn.error}", "classes": "label", "css": "color: red; font-weight: bold;"},
-              {"format": "${poker_buyIn.success}", "classes": "label", "css": "color: green;"}
+      {"title": "Run Poker Game", "icon": "lightning", "classes": "page min-h-6", "layout": [
+          {"classes": "flex items-start gap-3 min-w-10 min-h-10", "layout": [
+              {"classes": "flex gap-3", "layout": [
+                  {"classes": "size-equal card", "layout": [
+                      {"type": "status", "ref": "poker_run.game", "labels": ["No Game In Progress","Game in Progress"], "css": "font-size: 40px; font-weight: bold"}
+                    ]},
+                  {"classes": "size-equal card", "layout": [
+                      {"format": "Players:", "classes": "title"},
+                      {"format": "${poker_run.players}", "classes": "val"}
+                    ]},
+                  {"classes": "size-equal card", "layout": [
+                      {"format": "Money on Table:", "classes": "title"},
+                      {"format": "$${poker_run.onTable}", "classes": "val"}
+                    ]}
+                ]}
             ]},
-            {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
-              {"type": "savebutton", "title": "Save", "icon": "save", "ref": "poker_buyIn"}
-            ]}
-          ]}
-        ]},
-        {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
-          {"classes": "title", "format": "Cash Out or In Individual Players "},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Cash Out Player", "classes": "title"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player:", "classes": "label"},
-            {"type": "input", "ref": "poker_indiv.out"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Amount:", "classes": "label"},
-            {"type": "input", "ref": "poker_indiv.outAmnt"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Cash In Player", "classes": "title"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player:", "classes": "label"},
-            {"type": "input", "ref": "poker_indiv.in"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
-              {"format": "${poker_indiv.error}", "classes": "label", "css": "color: red; font-weight: bold;"},
-              {"format": "${poker_indiv.success}", "classes": "label", "css": "color: green;"}
+          {"classes": "flex items-start gap-3 min-w-10 min-h-10", "layout": [
+              {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
+                  {"classes": "title", "format": "Initialize Game"},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "label", "format": "Players:"},
+                      {"type": "dropdown", "ref": "poker_run.players", "options": "0,1,2,3,4,5,6,7,8,9,10", "css": "min-width: 8em;"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "label", "format": "Buy In:"},
+                      {"type": "dropdown", "ref": "poker_run.buy", "options": "$1, $5, $10, $15, $20", "css": "min-width: 8em;"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 1:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p1"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 2:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p2"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 3:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p3"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 4:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p4"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 5:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p5"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 6:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p6"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 7:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p7"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 8:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p8"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 9:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p9"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player 10:", "classes": "label"},
+                      {"type": "input", "ref": "poker_run.p10"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
+                          {"format": "${poker_run.error}", "classes": "label", "css": "color: red; font-weight: bold;"},
+                          {"format": "${poker_run.success}", "classes": "label", "css": "color: green;"}
+                        ]},
+                      {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
+                          {"type": "savebutton", "title": "Save", "icon": "save", "ref": "poker_run"}
+                        ]}
+                    ]}
+                ]},
+              {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
+                  {"classes": "title", "format": "Take Another Buy In"},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "label", "format": "Player"},
+                      {"type": "input", "ref": "poker_buyIn.play"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "label", "format": "Money is Being Added to the Table"},
+                      {"type": "toggle", "ref": "poker_buyIn.add"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
+                          {"format": "${poker_buyIn.error}", "classes": "label", "css": "color: red; font-weight: bold;"},
+                          {"format": "${poker_buyIn.success}", "classes": "label", "css": "color: green;"}
+                        ]},
+                      {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
+                          {"type": "savebutton", "title": "Save", "icon": "save", "ref": "poker_buyIn"}
+                        ]}
+                    ]}
+                ]},
+              {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
+                  {"classes": "title", "format": "Cash Out or In Individual Players "},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Cash Out Player", "classes": "title"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player:", "classes": "label"},
+                      {"type": "input", "ref": "poker_indiv.out"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Amount:", "classes": "label"},
+                      {"type": "input", "ref": "poker_indiv.outAmnt"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Cash In Player", "classes": "title"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player:", "classes": "label"},
+                      {"type": "input", "ref": "poker_indiv.in"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
+                          {"format": "${poker_indiv.error}", "classes": "label", "css": "color: red; font-weight: bold;"},
+                          {"format": "${poker_indiv.success}", "classes": "label", "css": "color: green;"}
+                        ]},
+                      {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
+                          {"type": "savebutton", "title": "Save", "icon": "save", "ref": "poker_indiv"}
+                        ]}
+                    ]}
+                ]},
+              {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
+                  {"classes": "title", "format": "End Game:"},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "Player", "classes": "title"},
+                      {"format": "Cash", "classes": "title"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p1}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p1Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p2}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p2Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p3}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p3Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p4}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p4Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p5}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p5Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p6}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p6Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p7}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p7Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p8}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p8Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p9}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p9Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"format": "${poker_end.p10}", "classes": "label"},
+                      {"type": "input", "ref": "poker_end.p10Cash"}
+                    ]},
+                  {"classes": "row justify-between items-center", "layout": [
+                      {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
+                          {"format": "${poker_end.error}", "classes": "label", "css": "color: red; font-weight: bold;"},
+                          {"format": "${poker_end.success}", "classes": "label", "css": "color: green;"}
+                        ]},
+                      {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
+                          {"type": "savebutton", "title": "Save", "icon": "save", "ref": "poker_end"}
+                        ]}
+                    ]}
+                ]}
             ]},
-            {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
-              {"type": "savebutton", "title": "Save", "icon": "save", "ref": "poker_indiv"}
+          {"classes": "flex items-start gap-3 min-w-10 min-h-10", "layout": [
+              {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
+                  {"classes": "title", "format": "Refresh Web UI"},
+                  {"classes": "row justify-center", "layout": [
+                      {"type": "action", "title": "Refresh", "icon": "refresh", "ref": "refresh"}
+                    ]}
+                ]}
             ]}
-          ]}
-        ]},
-        {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
-          {"classes": "title", "format": "End Game:"},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "Player", "classes": "title"},
-            {"format": "Cash", "classes": "title"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p1}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p1Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p2}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p2Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p3}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p3Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p4}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p4Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p5}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p5Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p6}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p6Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p7}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p7Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p8}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p8Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p9}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p9Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"format": "${poker_end.p10}", "classes": "label"},
-            {"type": "input", "ref": "poker_end.p10Cash"}
-          ]},
-          {"classes": "row justify-between items-center", "layout": [
-            {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
-              {"format": "${poker_end.error}", "classes": "label", "css": "color: red; font-weight: bold;"},
-              {"format": "${poker_end.success}", "classes": "label", "css": "color: green;"}
-            ]},
-            {"classes": "flex flex-col gap-3 min-w-10 min-h-10", "layout": [
-              {"type": "savebutton", "title": "Save", "icon": "save", "ref": "poker_end"}
-            ]}
-          ]}
         ]}
-      ]},
-      {"classes": "flex items-start gap-3 min-w-10 min-h-10", "layout": [
-        {"classes": "panel gap-1", "css": "flex: 0 0 24em;", "layout": [
-          {"classes": "title", "format": "Refresh Web UI"},
-          {"classes": "row justify-center", "layout": [
-            {"type": "action", "title": "Refresh", "icon": "refresh", "ref": "refresh"}
-          ]}
-        ]}
-      ]}
-    ]}
-  ], 
+    ], 
     "heartbeat": 1
   }, 
   "http": {"http": true, "https": false, "ui": true, "login": true, "ca": ""}, 
@@ -314,5 +233,86 @@
   "dns": {"type": "default", "url": "udp://8.8.8.8:53", "captive": false}, 
   "sntp": {"enable": false, "type": 0, "url": "udp://time.google.com:123", "interval": 3600}, 
   "modbus": {"enable": false, "port": 502}, 
-  "build": {"board": "unix", "ide": "GCC+make", "rtos": "baremetal"}
+  "build": {"board": "unix", "ide": "GCC+make", "rtos": "baremetal"}, 
+  "api": {
+    "refresh": {
+      "type": "action", 
+      "value": false
+    }, 
+    "time": {
+      "type": "object", 
+      "attributes": {
+        "utc": {"type": "string", "value": "utc", "size": 32}, 
+        "local": {"type": "string", "value": "local", "size": 32}, 
+        "up": {"type": "string", "value": "up", "size": 32}
+      }
+    }, 
+    "poker_run": {
+      "type": "object", 
+      "attributes": {
+        "players": {"type": "int", "value": 0}, 
+        "buy": {"type": "int", "value": 0}, 
+        "p1": {"type": "string", "value": "p1", "size": 25}, 
+        "p2": {"type": "string", "value": "p2", "size": 25}, 
+        "p3": {"type": "string", "value": "p3", "size": 25}, 
+        "p4": {"type": "string", "value": "p4", "size": 25}, 
+        "p5": {"type": "string", "value": "p5", "size": 25}, 
+        "p6": {"type": "string", "value": "p6", "size": 25}, 
+        "p7": {"type": "string", "value": "p7", "size": 25}, 
+        "p8": {"type": "string", "value": "p8", "size": 25}, 
+        "p9": {"type": "string", "value": "p9", "size": 25}, 
+        "p10": {"type": "string", "value": "p10", "size": 25}, 
+        "game": {"type": "bool", "value": false}, 
+        "onTable": {"type": "int", "value": 0}, 
+        "error": {"type": "string", "value": "error", "size": 50}, 
+        "success": {"type": "string", "value": "success", "size": 25}
+      }
+    }, 
+    "poker_buyIn": {
+      "type": "object", 
+      "attributes": {
+        "add": {"type": "bool", "value": false}, 
+        "play": {"type": "string", "value": "play", "size": 25}, 
+        "error": {"type": "string", "value": "error", "size": 25}, 
+        "success": {"type": "string", "value": "success", "size": 25}
+      }
+    }, 
+    "poker_indiv": {
+      "type": "object", 
+      "attributes": {
+        "outAmnt": {"type": "int", "value": 0}, 
+        "out": {"type": "string", "value": "p1", "size": 25}, 
+        "in": {"type": "string", "value": "p2", "size": 25}, 
+        "error": {"type": "string", "value": "error", "size": 25}, 
+        "success": {"type": "string", "value": "success", "size": 25}
+      }
+    }, 
+    "poker_end": {
+      "type": "object", 
+      "attributes": {
+        "p1": {"type": "string", "value": "p1", "size": 25}, 
+        "p2": {"type": "string", "value": "p2", "size": 25}, 
+        "p3": {"type": "string", "value": "p3", "size": 25}, 
+        "p4": {"type": "string", "value": "p4", "size": 25}, 
+        "p5": {"type": "string", "value": "p5", "size": 25}, 
+        "p6": {"type": "string", "value": "p6", "size": 25}, 
+        "p7": {"type": "string", "value": "p7", "size": 25}, 
+        "p8": {"type": "string", "value": "p8", "size": 25}, 
+        "p9": {"type": "string", "value": "p9", "size": 25}, 
+        "p10": {"type": "string", "value": "p10", "size": 25}, 
+        "p1Cash": {"type": "int", "value": 0}, 
+        "p2Cash": {"type": "int", "value": 0}, 
+        "p3Cash": {"type": "int", "value": 0}, 
+        "p4Cash": {"type": "int", "value": 0}, 
+        "p5Cash": {"type": "int", "value": 0}, 
+        "p6Cash": {"type": "int", "value": 0}, 
+        "p7Cash": {"type": "int", "value": 0}, 
+        "p8Cash": {"type": "int", "value": 0}, 
+        "p9Cash": {"type": "int", "value": 0}, 
+        "p10Cash": {"type": "int", "value": 0}, 
+        "error": {"type": "string", "value": "error", "size": 25}, 
+        "success": {"type": "string", "value": "success", "size": 25}
+      }
+    }
+  }
 }

@@ -7,7 +7,7 @@
 
 #if MG_ARCH == MG_ARCH_UNIX || MG_ARCH == MG_ARCH_WIN32
 #define HTTP_URL "http://0.0.0.0:8080"
-#define HTTPS_URL "https://0.0.0.0:8843"
+#define HTTPS_URL "https://0.0.0.0:8443"
 #else
 #define HTTP_URL "http://0.0.0.0:80"
 #define HTTPS_URL "https://0.0.0.0:443"
@@ -15,6 +15,26 @@
 
 #define NO_CACHE_HEADERS "Cache-Control: no-cache\r\n"
 #define JSON_HEADERS "Content-Type: application/json\r\n" NO_CACHE_HEADERS
+
+// How to create a self signed Elliptic Curve certificate, see
+// https://github.com/cesanta/mongoose/blob/master/test/certs/generate.sh
+#define TLS_CERT                                                       \
+  "-----BEGIN CERTIFICATE-----\n"                                      \
+  "MIIBMTCB2aADAgECAgkAluqkgeuV/zUwCgYIKoZIzj0EAwIwEzERMA8GA1UEAwwI\n" \
+  "TW9uZ29vc2UwHhcNMjQwNTA3MTQzNzM2WhcNMzQwNTA1MTQzNzM2WjARMQ8wDQYD\n" \
+  "VQQDDAZzZXJ2ZXIwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASo3oEiG+BuTt5y\n" \
+  "ZRyfwNr0C+SP+4M0RG2pYkb2v+ivbpfi72NHkmXiF/kbHXtgmSrn/PeTqiA8M+mg\n" \
+  "BhYjDX+zoxgwFjAUBgNVHREEDTALgglsb2NhbGhvc3QwCgYIKoZIzj0EAwIDRwAw\n" \
+  "RAIgTXW9MITQSwzqbNTxUUdt9DcB+8pPUTbWZpiXcA26GMYCIBiYw+DSFMLHmkHF\n" \
+  "+5U3NXW3gVCLN9ntD5DAx8LTG8sB\n"                                     \
+  "-----END CERTIFICATE-----\n"
+
+#define TLS_KEY                                                        \
+  "-----BEGIN EC PRIVATE KEY-----\n"                                   \
+  "MHcCAQEEIAVdo8UAScxG7jiuNY2UZESNX/KPH8qJ0u0gOMMsAzYWoAoGCCqGSM49\n" \
+  "AwEHoUQDQgAEqN6BIhvgbk7ecmUcn8Da9Avkj/uDNERtqWJG9r/or26X4u9jR5Jl\n" \
+  "4hf5Gx17YJkq5/z3k6ogPDPpoAYWIw1/sw==\n"                             \
+  "-----END EC PRIVATE KEY-----\n"
 
 struct mg_mgr g_mgr;  // Mongoose event manager
 
@@ -39,12 +59,16 @@ struct apihandler {
   bool readonly;
   int read_level;
   int write_level;
-  unsigned long version;               // Every change increments version
-  const struct attribute *attributes;  // Points to the strucure descriptor
-  void (*getter)(void *);              // Getter/check/begin function
-  void (*setter)(void *);              // Setter/start/end function
-  void (*writer)(void);                // Write function (OTA and upload)
-  size_t data_size;                    // Size of C structure
+  unsigned long version;                   // Every change increments version
+  const struct attribute *attributes;      // Points to the strucure descriptor
+  void (*getter)(void *);                  // Getter/check/begin function
+  void (*setter)(void *);                  // Setter/start/end function
+  void *(*opener)(char *, size_t);         // Open function (OTA and upload)
+  bool (*closer)(void *);                  // Closer function (OTA and upload)
+  bool (*writer)(void *, void *, size_t);  // Writer function (OTA and upload)
+  bool (*checker)(void);                   // Checker function for actions
+  void (*starter)(void);                   // Starter function for actions
+  size_t data_size;                        // Size of C structure
 };
 
 struct attribute s_time_attributes[] = {
@@ -68,7 +92,7 @@ struct attribute s_poker_run_attributes[] = {
   {"p10", "string", offsetof(struct poker_run, p10), 25, false},
   {"game", "bool", offsetof(struct poker_run, game), 0, false},
   {"onTable", "int", offsetof(struct poker_run, onTable), 0, false},
-  {"error", "string", offsetof(struct poker_run, error), 25, false},
+  {"error", "string", offsetof(struct poker_run, error), 50, false},
   {"success", "string", offsetof(struct poker_run, success), 25, false},
   {NULL, NULL, 0, 0, false}
 };
@@ -113,12 +137,12 @@ struct attribute s_poker_end_attributes[] = {
   {NULL, NULL, 0, 0, false}
 };
 static struct apihandler s_apihandlers[] = {
-  {"refresh", "action", false, 0, 0, 0UL, NULL, (void (*)(void *)) glue_check_refresh, (void (*)(void *)) glue_start_refresh, NULL, 0},
-  {"time", "object", false, 0, 0, 0UL, s_time_attributes, (void (*)(void *)) glue_get_time, (void (*)(void *)) glue_set_time, NULL, sizeof(struct time)},
-  {"poker_run", "object", false, 0, 0, 0UL, s_poker_run_attributes, (void (*)(void *)) glue_get_poker_run, (void (*)(void *)) glue_set_poker_run, NULL, sizeof(struct poker_run)},
-  {"poker_buyIn", "object", false, 0, 0, 0UL, s_poker_buyIn_attributes, (void (*)(void *)) glue_get_poker_buyIn, (void (*)(void *)) glue_set_poker_buyIn, NULL, sizeof(struct poker_buyIn)},
-  {"poker_indiv", "object", false, 0, 0, 0UL, s_poker_indiv_attributes, (void (*)(void *)) glue_get_poker_indiv, (void (*)(void *)) glue_set_poker_indiv, NULL, sizeof(struct poker_indiv)},
-  {"poker_end", "object", false, 0, 0, 0UL, s_poker_end_attributes, (void (*)(void *)) glue_get_poker_end, (void (*)(void *)) glue_set_poker_end, NULL, sizeof(struct poker_end)}
+  {"refresh", "action", false, 0, 0, 0UL, NULL, NULL, NULL, NULL, NULL, NULL, glue_check_refresh, glue_start_refresh, 0},
+  {"time", "object", false, 0, 0, 0UL, s_time_attributes, (void (*)(void *)) glue_get_time, (void (*)(void *)) glue_set_time, NULL, NULL, NULL, NULL, NULL, sizeof(struct time)},
+  {"poker_run", "object", false, 0, 0, 0UL, s_poker_run_attributes, (void (*)(void *)) glue_get_poker_run, (void (*)(void *)) glue_set_poker_run, NULL, NULL, NULL, NULL, NULL, sizeof(struct poker_run)},
+  {"poker_buyIn", "object", false, 0, 0, 0UL, s_poker_buyIn_attributes, (void (*)(void *)) glue_get_poker_buyIn, (void (*)(void *)) glue_set_poker_buyIn, NULL, NULL, NULL, NULL, NULL, sizeof(struct poker_buyIn)},
+  {"poker_indiv", "object", false, 0, 0, 0UL, s_poker_indiv_attributes, (void (*)(void *)) glue_get_poker_indiv, (void (*)(void *)) glue_set_poker_indiv, NULL, NULL, NULL, NULL, NULL, sizeof(struct poker_indiv)},
+  {"poker_end", "object", false, 0, 0, 0UL, s_poker_end_attributes, (void (*)(void *)) glue_get_poker_end, (void (*)(void *)) glue_set_poker_end, NULL, NULL, NULL, NULL, NULL, sizeof(struct poker_end)}
 };
 
 static struct apihandler *find_handler(struct mg_http_message *hm) {
@@ -329,9 +353,7 @@ static void handle_uploads(struct mg_connection *c, int ev, void *ev_data) {
         if (h != NULL &&
             (strcmp(h->type, "upload") == 0 || strcmp(h->type, "ota") == 0)) {
       // OTA/upload endpoints
-      prep_upload(c, hm, (void *(*) (char *, size_t)) h->getter,
-                  (bool (*)(void *)) h->setter,
-                  (bool (*)(void *, void *, size_t)) h->writer);
+      prep_upload(c, hm, h->opener, h->closer, h->writer);
     }
   }
 }
@@ -411,8 +433,7 @@ static void handle_api_call(struct mg_connection *c, struct mg_http_message *hm,
     mg_http_reply(c, 200, JSON_HEADERS, "{%M}\n", print_struct, h, data);
     free(data);
   } else if (strcmp(h->type, "action") == 0) {
-    handle_action(c, hm, (bool (*)(void)) h->getter,
-                  (void (*)(void)) h->setter);
+    handle_action(c, hm, h->checker, h->starter);
   } else {
     mg_http_reply(c, 500, JSON_HEADERS, "API type %s unknown\n", h->type);
   }
@@ -479,8 +500,8 @@ static void http_ev_handler(struct mg_connection *c, int ev, void *ev_data) {
     if (c->fn_data != NULL) {  // TLS listener
       struct mg_tls_opts opts;
       memset(&opts, 0, sizeof(opts));
-      opts.cert = mg_unpacked("/certs/server_cert.pem");
-      opts.key = mg_unpacked("/certs/server_key.pem");
+      opts.cert = mg_str(TLS_CERT);
+      opts.key = mg_str(TLS_KEY);
       mg_tls_init(c, &opts);
     }
   }

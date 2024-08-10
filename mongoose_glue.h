@@ -11,31 +11,25 @@ extern "C" {
 
 #include "mongoose.h"
 
-////////////////////////////////////////////// HTTP
 #define WIZARD_ENABLE_HTTP 1
 #define WIZARD_ENABLE_HTTPS 0
 #define WIZARD_ENABLE_HTTP_UI 1
 #define WIZARD_ENABLE_HTTP_UI_LOGIN 1
 
-//////////////////////////////////////////////  MQTT
 #define WIZARD_ENABLE_MQTT 0
 #define WIZARD_MQTT_URL ""
 
-//////////////////////////////////////////////  SNTP
 #define WIZARD_ENABLE_SNTP 0  // Enable time sync.
 #define WIZARD_SNTP_TYPE 0    // 0: default Google, 1: DHCP, 2: custom
 #define WIZARD_SNTP_URL "udp://time.google.com:123"  // Custom SNTP server URL
 #define WIZARD_SNTP_INTERVAL_SECONDS 3600            // Frequency of SNTP syncs
 
-//////////////////////////////////////////////  DNS
-#define WIZARD_DNS_TYPE 0     // 0: default Google, 1: DHCP, 2: custom
-#define WIZARD_DNS_URL "udp://8.8.8.8:53"            // Custom DNS server URL
+#define WIZARD_DNS_TYPE 0  // 0: default Google, 1: DHCP, 2: custom
+#define WIZARD_DNS_URL "udp://8.8.8.8:53"  // Custom DNS server URL
 
-//////////////////////////////////////////////  MODBUS
 #define WIZARD_ENABLE_MODBUS 0
 #define WIZARD_MODBUS_PORT 502
 
-//////////////////////////////////////////////  Initialize & run
 void mongoose_init(void);    // Initialise Mongoose
 void mongoose_poll(void);    // Poll Mongoose
 extern struct mg_mgr g_mgr;  // Mongoose event manager
@@ -58,10 +52,6 @@ void glue_unlock(void);     // Unlock global Mongoose mutex
 #define glue_lock()
 #define glue_unlock()
 #endif
-
-// Print arbitrary string. Supported format is printf, plus %m/%M, see
-// https://mongoose.ws/documentation/#mg_snprintf-mg_vsnprintf
-size_t glue_printf(void *context, const char *format, ...);
 
 // Increment device change state counter - trigger UI refresh
 void glue_update_state(void);
@@ -96,7 +86,7 @@ struct poker_run {
   char p10[25];
   bool game;
   int onTable;
-  char error[25];
+  char error[50];
   char success[25];
 };
 void glue_get_poker_run(struct poker_run *);

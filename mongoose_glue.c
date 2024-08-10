@@ -20,8 +20,25 @@ typedef enum{
   NUM_MG_ERROR
 } MG_ERROR_T;
 
+enum poker_players
+{
+    PLAYER1,
+    PLAYER2,
+    PLAYER3,
+    PLAYER4,
+    PLAYER5,
+    PLAYER6,
+    PLAYER7,
+    PLAYER8,
+    PLAYER9,
+    PLAYER10,
+    POKER_PLAYER_MAX
+};
+
 static bool poker_in_progress = false;
-//static char poker_player_names[POKER_PLAYER_MAX][POKER_NAME_LEN];
+static char current_players[POKER_PLAYER_MAX][POKER_NAME_LEN];
+static __uint8_t num_poker_players;
+
 static bool refreshing = false;
 
 void glue_init(void) {
@@ -61,44 +78,50 @@ void glue_set_time(struct time *data) {
   s_time = *data;
 }
 
-static int players_put_in_lowest_num_check_and_get_num_players(struct poker_run *data)
-{
-  bool emptyFound = false;
-  int num = 0;
-  if(strcmp(data->p1, POKER_NO_GAME) == 0)
-  {
-    emptyFound = true;
-  }
-  else
-  {
-    num++;
-  }
-  if(strcmp(data->p2, POKER_NO_GAME) == 0)
-  {
-    if(emptyFound)
-    {
-      sprintf(data->error, "Place P2 in Lowest Index");
-      return -1;
-    }
-    else
-    {
-      emptyFound = true;
-    } 
-  }
-  else
-  {
-    num++;
-  }
-
-  return num;
-}
-
 static struct poker_run s_poker_run = {0, 0, "p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", false, 0, "error", "success"};
 MG_ERROR_T poker_run_error = NO_CHANGE;
 void glue_get_poker_run(struct poker_run *data) {
   if(poker_in_progress)
   {
     printf("-----POKER IN PROGRESS-----\n");
+    int i = 0;
+    while(strcmp(current_players[i], "") != 0)
+    {
+      switch(i)
+      {
+        case PLAYER1:
+          strncpy(s_poker_run.p1, current_players[PLAYER1], strlen(current_players[PLAYER1]));
+          break;
+        case PLAYER2:
+          strncpy(s_poker_run.p2, current_players[PLAYER2], strlen(current_players[PLAYER2]));
+          break;
+        case PLAYER3:
+          strncpy(s_poker_run.p3, current_players[PLAYER3], strlen(current_players[PLAYER3]));
+          break;
+        case PLAYER4:
+          strncpy(s_poker_run.p4, current_players[PLAYER4], strlen(current_players[PLAYER4]));
+          break;
+        case PLAYER5:
+          strncpy(s_poker_run.p5, current_players[PLAYER5], strlen(current_players[PLAYER5]));
+          break;
+        case PLAYER6:
+          strncpy(s_poker_run.p6, current_players[PLAYER6], strlen(current_players[PLAYER6]));
+          break;
+        case PLAYER7:
+          strncpy(s_poker_run.p7, current_players[PLAYER7], strlen(current_players[PLAYER7]));
+          break;
+        case PLAYER8:
+          strncpy(s_poker_run.p8, current_players[PLAYER8], strlen(current_players[PLAYER8]));
+          break;
+        case PLAYER9:
+          strncpy(s_poker_run.p9, current_players[PLAYER9], strlen(current_players[PLAYER9]));
+          break;
+        case PLAYER10:
+          strncpy(s_poker_run.p10, current_players[PLAYER10], strlen(current_players[PLAYER10]));
+          break;
+      }
+      i++;
+    }
   }
   else
   {
@@ -150,7 +173,7 @@ void glue_set_poker_run(struct poker_run *data) {
   }
   else
   {
-    //Checking if each any player entries match
+    //Checking if any player entries match
     if((strcmp(data->p1, data->p2) == 0
               || strcmp(data->p1, data->p3) == 0
               || strcmp(data->p1, data->p4) == 0
@@ -290,11 +313,60 @@ void glue_set_poker_run(struct poker_run *data) {
     {
       poker_run_error = ERROR_CHANGE;
       sprintf(data->error, "P%d %s", 10, POKER_DNE);
-    }
-    //Checking Players Are In Lowest P# Possible AND at least two players
-    else if(players_put_in_lowest_num_check_and_get_num_players(data) < 0)
+    } //At this point we know that every player entered exists and none are duplicates, no errors
+    else
     {
-      poker_run_error = ERROR_CHANGE;
+      num_poker_players = 0;
+      if(strcmp(data->p1, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p1, strlen(data->p1));
+        num_poker_players++;
+      }
+      if(strcmp(data->p2, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p2, strlen(data->p2));
+        num_poker_players++;
+      }
+      if(strcmp(data->p3, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p3, strlen(data->p3));
+        num_poker_players++;
+      }
+     if(strcmp(data->p4, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p4, strlen(data->p4));
+        num_poker_players++;
+      }
+     if(strcmp(data->p5, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p5, strlen(data->p5));
+        num_poker_players++;
+      }
+     if(strcmp(data->p6, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p6, strlen(data->p6));
+        num_poker_players++;
+      }
+     if(strcmp(data->p7, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p7, strlen(data->p7));
+        num_poker_players++;
+      }
+     if(strcmp(data->p8, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p8, strlen(data->p8));
+        num_poker_players++;
+      }
+      if(strcmp(data->p10, POKER_NO_GAME) != 0)
+      {
+        strncpy(current_players[num_poker_players], data->p10, strlen(data->p10));
+        num_poker_players++;
+      } 
+      if(num_poker_players > 1)
+      {
+        poker_run_error = SUCCESS_CHANGE;
+        poker_in_progress = true;
+      }
     }
 
     s_poker_run = *data;
